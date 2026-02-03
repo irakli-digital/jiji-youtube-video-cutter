@@ -26,18 +26,22 @@ source ~/.zshrc
 # 1. Cut segment
 vidpro cut episode.mp4 00:05:30 00:06:00 /tmp/segment.mp4
 
-# 2. Clean SRT
+# 2. Face crop to vertical FIRST (before subs!)
+vidpro face-crop /tmp/segment.mp4 /tmp/segment_vertical.mp4
+
+# 3. Transcribe the CUT clip (not full episode) → get SRT
+
+# 4. Clean SRT
 vidpro clean-srt segment.srt segment_clean.srt
 
-# 3. Burn subtitles
-vidpro subs /tmp/segment.mp4 segment_clean.srt /tmp/segment_sub.mp4
+# 5. Burn subtitles (on vertical video, with 9:16 preset)
+vidpro subs /tmp/segment_vertical.mp4 segment_clean.srt short_final.mp4
 
-# 4. Face crop to vertical
-vidpro face-crop /tmp/segment_sub.mp4 short_final.mp4
-
-# 5. Generate thumbnail
+# 6. Generate thumbnail
 vidpro thumbnail episode.mp4 segment.srt "L2 R1" "ტექსტი 1" "ტექსტი 2" thumb.jpg
 ```
+
+**Why this order?** Subtitles must be burned AFTER face crop — otherwise they get cropped or positioned wrong for 9:16.
 
 ### Batch Processing
 
